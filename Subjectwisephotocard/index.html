@@ -1,0 +1,2307 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>সাবজেক্ট-ওয়াইজ ফটোকার্ড মেকার - প্রফেশনাল</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --secondary: #4E47D5;
+            --accent: #FF6584;
+            --success: #36D1DC;
+            --warning: #FFB800;
+            --light: #F8F9FA;
+            --dark: #212529;
+            --darker: #12141D;
+            --card-bg: #FFFFFF;
+            --text-primary: #2D3748;
+            --text-secondary: #718096;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --border-radius: 16px;
+        }
+
+        .dark-theme {
+            --light: #12141D;
+            --dark: #F8F9FA;
+            --darker: #0A0B12;
+            --card-bg: #1A1D2E;
+            --text-primary: #EDF2F7;
+            --text-secondary: #A0AEC0;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+        }
+
+        body {
+            background: var(--light);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+            transition: var(--transition);
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .dark-theme body {
+            background-image: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px 30px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            background-image: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo h1 {
+            color: white;
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-item {
+            padding: 12px 22px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .theme-toggle {
+            background: var(--light);
+            border: 2px solid white;
+            width: 60px;
+            height: 30px;
+            border-radius: 30px;
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .theme-toggle::before {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--primary);
+            top: 1px;
+            left: 2px;
+            transition: var(--transition);
+        }
+
+        .dark-theme .theme-toggle::before {
+            left: 32px;
+            background: white;
+        }
+
+        /* Subject Selection */
+        .subject-selection {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .subject-title {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            font-weight: 600;
+            text-align: center;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .subject-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .subject-card {
+            background: var(--light);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 150px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .subject-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transition: var(--transition);
+        }
+
+        .subject-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .subject-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .subject-card.active {
+            border-color: var(--primary);
+            background: rgba(108, 99, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .subject-card.active::before {
+            transform: scaleX(1);
+        }
+
+        .subject-card i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .subject-card h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* Section Management */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .input-section {
+            flex: 1;
+            min-width: 350px;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .card-preview {
+            flex: 2;
+            min-width: 350px;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .section-title {
+            color: var(--primary);
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            font-weight: 600;
+            text-align: center;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            background: var(--light);
+            color: var(--text-primary);
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        /* Image Upload Styles */
+        .image-upload-container {
+            margin-top: 20px;
+            border: 2px dashed #E2E8F0;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: var(--transition);
+            background: var(--light);
+        }
+
+        .image-upload-container.dragover {
+            border-color: var(--primary);
+            background: rgba(108, 99, 255, 0.05);
+        }
+
+        .image-upload-label {
+            display: block;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 10px;
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            transition: var(--transition);
+            margin-bottom: 15px;
+        }
+
+        .image-upload-label:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 15px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .upload-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+
+        .upload-option-btn {
+            padding: 8px 15px;
+            border-radius: 8px;
+            background: var(--light);
+            border: 1px solid #E2E8F0;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .upload-option-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 16px 28px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn-generate {
+            background: var(--accent);
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-generate:hover {
+            background: #FF3366;
+        }
+
+        .btn-download {
+            background: var(--success);
+        }
+
+        .btn-download:hover {
+            background: #25B8C2;
+        }
+
+        .btn-share {
+            background: var(--warning);
+        }
+
+        .btn-share:hover {
+            background: #E5A500;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .action-buttons .btn {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        /* Preview Container */
+        .preview-container {
+            width: 100%;
+            min-height: 500px;
+            border: 3px dashed #E2E8F0;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            overflow: hidden;
+            background: var(--light);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .photocard {
+            width: 100%;
+            height: 100%;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-radius: 15px;
+        }
+
+        .photocard .content {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 25px;
+            border-radius: 15px;
+            width: 90%;
+            backdrop-filter: blur(5px);
+            max-width: 800px;
+        }
+
+        .photocard h3 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .photocard p {
+            font-size: 1.3rem;
+            line-height: 1.6;
+        }
+
+        /* Subject-specific styles */
+        .bangla-card {
+            background: linear-gradient(135deg, #1E3C72 0%, #2A5298 100%);
+        }
+
+        .math-card {
+            background: linear-gradient(135deg, #FF5E62 0%, #FF9966 100%);
+        }
+
+        .english-card {
+            background: linear-gradient(135deg, #614385 0%, #516395 100%);
+        }
+
+        .science-card {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .physics-card {
+            background: linear-gradient(135deg, #4568DC 0%, #B06AB3 100%);
+        }
+
+        .chemistry-card {
+            background: linear-gradient(135deg, #FF4E50 0%, #F9D423 100%);
+        }
+
+        .biology-card {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+        }
+
+        .geography-card {
+            background: linear-gradient(135deg, #3494E6 0%, #EC6EAD 100%);
+        }
+
+        .history-card {
+            background: linear-gradient(135deg, #C06C84 0%, #6C5B7B 100%);
+        }
+
+        .ict-card {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+        }
+
+        .accounting-card {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        }
+
+        .economics-card {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .business-card {
+            background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+        }
+
+        .civics-card {
+            background: linear-gradient(135deg, #16a085 0%, #1abc9c 100%);
+        }
+
+        .sociology-card {
+            background: linear-gradient(135deg, #d35400 0%, #e67e22 100%);
+        }
+
+        .psychology-card {
+            background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+        }
+
+        .philosophy-card {
+            background: linear-gradient(135deg, #7f8c8d 0%, #95a5a6 100%);
+        }
+
+        .art-card {
+            background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%);
+        }
+
+        .pe-card {
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+        }
+
+        .custom-card {
+            background: linear-gradient(135deg, #6C63FF 0%, #FF6584 100%);
+        }
+
+        /* Template Selection */
+        .template-selection {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .template-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .template-option {
+            padding: 10px 15px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .template-option:hover {
+            border-color: var(--primary);
+        }
+
+        .template-option.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Gallery Styles */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .gallery-item {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .gallery-item-content {
+            padding: 15px;
+        }
+
+        .gallery-item h4 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .gallery-item p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .empty-gallery {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .empty-gallery i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .install-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: var(--primary);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .install-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            max-width: 300px;
+            box-shadow: var(--shadow);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: var(--success);
+        }
+
+        .notification.error {
+            background: var(--accent);
+        }
+
+        .notification.info {
+            background: var(--primary);
+        }
+
+        /* Custom Subject Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            background: var(--light);
+            border-radius: 10px;
+            height: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .quick-action-btn {
+            padding: 10px 15px;
+            background: var(--light);
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .quick-action-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .subject-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .template-options {
+                flex-direction: column;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .upload-options {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .subject-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Offline Indicator */
+        .offline-indicator {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            z-index: 1000;
+            display: none;
+            box-shadow: var(--shadow);
+        }
+
+        .offline-indicator.show {
+            display: block;
+        }
+
+        /* Search Bar */
+        .search-container {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .search-input {
+            padding-left: 40px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-indicator" id="offline-indicator">
+        <i class="fas fa-wifi"></i> আপনি অফলাইন মোডে আছেন
+    </div>
+
+    <!-- Custom Subject Modal -->
+    <div class="modal" id="custom-subject-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">নতুন বিষয় যোগ করুন</h3>
+                <button class="close-modal" id="close-modal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="custom-subject-name">বিষয়ের নাম</label>
+                <input type="text" id="custom-subject-name" placeholder="বিষয়ের নাম লিখুন">
+            </div>
+            <div class="form-group">
+                <label for="custom-subject-color">বিষয়ের রং</label>
+                <input type="color" id="custom-subject-color" value="#6C63FF">
+            </div>
+            <div class="form-group">
+                <label for="custom-subject-icon">বিষয়ের আইকন</label>
+                <select id="custom-subject-icon">
+                    <option value="fas fa-book">বই</option>
+                    <option value="fas fa-calculator">ক্যালকুলেটর</option>
+                    <option value="fas fa-flask">ফ্লাস্ক</option>
+                    <option value="fas fa-globe">গ্লোব</option>
+                    <option value="fas fa-palette">প্যালেট</option>
+                    <option value="fas fa-music">সঙ্গীত</option>
+                    <option value="fas fa-code">কোড</option>
+                    <option value="fas fa-chart-bar">চার্ট</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="cancel-custom-subject">বাতিল</button>
+                <button class="btn" id="save-custom-subject">সেভ করুন</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-images" style="font-size: 40px;"></i>
+                <h1>সাবজেক্ট ফটোকার্ড মেকার</h1>
+            </div>
+            <div class="nav-menu">
+                <div class="nav-item active" data-section="create">
+                    <i class="fas fa-plus-circle"></i> কার্ড তৈরি
+                </div>
+                <div class="nav-item" data-section="gallery">
+                    <i class="fas fa-images"></i> গ্যালারি
+                </div>
+                <div class="nav-item" data-section="templates">
+                    <i class="fas fa-palette"></i> টেমপ্লেট
+                </div>
+                <div class="nav-item" data-section="settings">
+                    <i class="fas fa-cog"></i> সেটিংস
+                </div>
+            </div>
+            <div class="theme-toggle" id="theme-toggle"></div>
+        </header>
+
+        <div class="subject-selection">
+            <h2 class="subject-title">বিষয় নির্বাচন করুন</h2>
+            <div class="subject-grid" id="subject-grid">
+                <!-- Subjects will be dynamically added here -->
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn" id="add-custom-subject">
+                    <i class="fas fa-plus"></i> নতুন বিষয় যোগ করুন
+                </button>
+            </div>
+        </div>
+
+        <!-- Create Card Section -->
+        <div class="section active" id="create-section">
+            <div class="main-content">
+                <div class="input-section">
+                    <h2 class="section-title">ফটোকার্ড তৈরি করুন</h2>
+                    
+                    <div class="form-group">
+                        <label for="card-title">শিরোনাম</label>
+                        <input type="text" id="card-title" placeholder="কার্ডের শিরোনাম লিখুন" value="বাংলা ব্যাকরণ">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="card-content">বিষয়বস্তু</label>
+                        <textarea id="card-content" placeholder="কার্ডের বিষয়বস্তু লিখুন">বাংলা ভাষায় বাক্য গঠনের নিয়ম:
+১. কর্তা + ক্রিয়া + কর্ম
+২. বিশেষণ বিশেষ্যের আগে বসে
+৩. ক্রিয়ার কাল অনুযায়ী বাক্য গঠিত হয়</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>ব্যাকগ্রাউন্ড ইমেজ</label>
+                        <div class="upload-options">
+                            <div class="upload-option-btn active" id="url-option">ইমেজ URL</div>
+                            <div class="upload-option-btn" id="upload-option">ইমেজ আপলোড</div>
+                            <div class="upload-option-btn" id="gradient-option">গ্রেডিয়েন্ট</div>
+                        </div>
+                        
+                        <!-- URL Input -->
+                        <div id="url-input-container">
+                            <input type="url" id="image-url" placeholder="https://example.com/image.jpg" value="https://images.unsplash.com/photo-1589994965851-a8f479c573a9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80">
+                            <small style="color: var(--text-secondary); margin-top: 5px; display: block;">ছবির URL যোগ করলে তা ব্যাকগ্রাউন্ড হিসেবে দেখাবে</small>
+                        </div>
+                        
+                        <!-- Image Upload -->
+                        <div class="image-upload-container" id="image-upload-container" style="display: none;">
+                            <label for="image-upload" class="image-upload-label">
+                                <i class="fas fa-cloud-upload-alt"></i> ইমেজ আপলোড করুন
+                            </label>
+                            <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                            <p style="color: var(--text-secondary); margin-bottom: 10px;">বা এখানে ইমেজ ড্র্যাগ করে দিন</p>
+                            <img id="image-preview" class="image-preview" alt="আপলোড করা ইমেজের প্রিভিউ">
+                            <button class="btn" id="remove-image" style="display: none; margin-top: 10px; padding: 10px 15px;">
+                                <i class="fas fa-trash"></i> ইমেজ সরান
+                            </button>
+                        </div>
+
+                        <!-- Gradient Options -->
+                        <div id="gradient-container" style="display: none;">
+                            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                <input type="color" id="gradient-color1" value="#6C63FF">
+                                <input type="color" id="gradient-color2" value="#FF6584">
+                            </div>
+                            <select id="gradient-direction">
+                                <option value="to right">বাম থেকে ডান</option>
+                                <option value="to left">ডান থেকে বাম</option>
+                                <option value="to bottom">উপর থেকে নিচ</option>
+                                <option value="to top">নিচ থেকে উপর</option>
+                                <option value="135deg">তির্যক</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="template-selection">
+                        <label>টেমপ্লেট স্টাইল:</label>
+                        <div class="template-options">
+                            <div class="template-option active" data-template="default">ডিফল্ট</div>
+                            <div class="template-option" data-template="minimal">মিনিমাল</div>
+                            <div class="template-option" data-template="elegant">এলিগ্যান্ট</div>
+                            <div class="template-option" data-template="creative">ক্রিয়েটিভ</div>
+                            <div class="template-option" data-template="modern">মডার্ন</div>
+                        </div>
+                    </div>
+
+                    <div class="quick-actions">
+                        <div class="quick-action-btn" id="copy-content">
+                            <i class="fas fa-copy"></i> কন্টেন্ট কপি করুন
+                        </div>
+                        <div class="quick-action-btn" id="clear-all">
+                            <i class="fas fa-trash"></i> সবকিছু ক্লিয়ার করুন
+                        </div>
+                        <div class="quick-action-btn" id="auto-fill">
+                            <i class="fas fa-magic"></i> অটো ফিল করুন
+                        </div>
+                    </div>
+
+                    <button class="btn btn-generate" id="generate-card">
+                        <i class="fas fa-magic"></i> কার্ড তৈরি করুন
+                    </button>
+
+                    <div style="margin-top: 30px;">
+                        <h3><i class="fas fa-lightbulb"></i> টিপস</h3>
+                        <ul style="margin-top: 10px; padding-left: 20px; color: var(--text-secondary);">
+                            <li>ছবির URL ব্যবহার করে কার্ডকে আরও আকর্ষণীয় করুন</li>
+                            <li>কম্পিউটার থেকে ইমেজ আপলোড করতে পারেন</li>
+                            <li>প্রতিটি বিষয়ের জন্য আলাদা আলাদা রং এবং ডিজাইন</li>
+                            <li>বিষয়বস্তু সংক্ষিপ্ত এবং স্পষ্ট রাখুন</li>
+                            <li>অফলাইন থাকলেও কার্ড তৈরি ও ডাউনলোড করতে পারবেন</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card-preview">
+                    <h2 class="section-title">কার্ড প্রিভিউ</h2>
+                    <div class="preview-container">
+                        <div class="photocard bangla-card" id="preview-card" style="background-image: url('https://images.unsplash.com/photo-1589994965851-a8f479c573a9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+                            <div class="content">
+                                <h3 id="preview-title">বাংলা ব্যাকরণ</h3>
+                                <p id="preview-content">বাংলা ভাষায় বাক্য গঠনের নিয়ম:
+১. কর্তা + ক্রিয়া + কর্ম
+২. বিশেষণ বিশেষ্যের আগে বসে
+৩. ক্রিয়ার কাল অনুযায়ী বাক্য গঠিত হয়</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-download" id="download-png">
+                            <i class="fas fa-download"></i> PNG ডাউনলোড
+                        </button>
+                        <button class="btn btn-download" id="download-jpg">
+                            <i class="fas fa-download"></i> JPG ডাউনলোড
+                        </button>
+                        <button class="btn" id="download-pdf" style="background: #FF5722;">
+                            <i class="fas fa-file-pdf"></i> PDF ডাউনলোড
+                        </button>
+                        <button class="btn" id="save-to-gallery" style="background: #9C27B0;">
+                            <i class="fas fa-save"></i> গ্যালারিতে সেভ
+                        </button>
+                        <button class="btn" id="share-card" style="background: #2196F3;">
+                            <i class="fas fa-share-alt"></i> শেয়ার করুন
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gallery Section -->
+        <div class="section" id="gallery-section">
+            <div class="card-preview">
+                <h2 class="section-title">আপনার তৈরি কার্ড গ্যালারি</h2>
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="gallery-search" placeholder="কার্ড খুঁজুন...">
+                </div>
+                <div class="gallery-grid" id="gallery-container">
+                    <!-- Gallery items will be dynamically added here -->
+                </div>
+                <div class="empty-gallery" id="empty-gallery" style="display: none;">
+                    <i class="fas fa-images"></i>
+                    <h3>গ্যালারি খালি</h3>
+                    <p>আপনি এখনও কোন কার্ড গ্যালারিতে সেভ করেননি</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Templates Section -->
+        <div class="section" id="templates-section">
+            <div class="card-preview">
+                <h2 class="section-title">টেমপ্লেট গ্যালারি</h2>
+                <div class="gallery-grid">
+                    <div class="gallery-item" data-template="math">
+                        <img src="https://via.placeholder.com/300/FF5E62/FFFFFF?text=গণিত+টেমপ্লেট" alt="গণিত টেমপ্লেট">
+                        <div class="gallery-item-content">
+                            <h4>গণিত সূত্র টেমপ্লেট</h4>
+                            <p>গণিতের সূত্র সংরক্ষণের জন্য বিশেষ ডিজাইন</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item" data-template="science">
+                        <img src="https://via.placeholder.com/300/11998e/FFFFFF?text=বিজ্ঞান+টেমপ্লেট" alt="বিজ্ঞান টেমপ্লেট">
+                        <div class="gallery-item-content">
+                            <h4>বিজ্ঞান টেমপ্লেট</h4>
+                            <p>বৈজ্ঞানিক তথ্য উপস্থাপনের জন্য আদর্শ</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item" data-template="english">
+                        <img src="https://via.placeholder.com/300/614385/FFFFFF?text=ইংরেজি+টেমপ্লেট" alt="ইংরেজি টেমপ্লেট">
+                        <div class="gallery-item-content">
+                            <h4>ইংরেজি ব্যাকরণ টেমপ্লেট</h4>
+                            <p>ভাষা শিক্ষার জন্য উপযোগী ডিজাইন</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item" data-template="history">
+                        <img src="https://via.placeholder.com/300/C06C84/FFFFFF?text=ইতিহাস+টেমপ্লেট" alt="ইতিহাস টেমপ্লেট">
+                        <div class="gallery-item-content">
+                            <h4>ইতিহাস টেমপ্লেট</h4>
+                            <p>ঐতিহাসিক ঘটনা উপস্থাপনের জন্য</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Section -->
+        <div class="section" id="settings-section">
+            <div class="card-preview">
+                <h2 class="section-title">সেটিংস</h2>
+                <div class="input-section">
+                    <div class="form-group">
+                        <label for="export-data">ডেটা এক্সপোর্ট করুন</label>
+                        <button class="btn" id="export-data" style="width: 100%;">
+                            <i class="fas fa-file-export"></i> সমস্ত ডেটা এক্সপোর্ট করুন
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label for="import-data">ডেটা ইমপোর্ট করুন</label>
+                        <input type="file" id="import-data" accept=".json" style="margin-bottom: 10px;">
+                        <button class="btn" id="import-data-btn" style="width: 100%;">
+                            <i class="fas fa-file-import"></i> ডেটা ইমপোর্ট করুন
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label for="reset-data">সমস্ত ডেটা রিসেট করুন</label>
+                        <button class="btn" id="reset-data" style="width: 100%; background: var(--accent);">
+                            <i class="fas fa-trash"></i> সমস্ত ডেটা রিসেট করুন
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label for="app-version">অ্যাপের ভার্সন</label>
+                        <p id="app-version" style="padding: 10px; background: var(--light); border-radius: 8px;">v2.0.0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© ২০২৪ সাবজেক্ট ফটোকার্ড মেকার - শিক্ষার্থীদের জন্য প্রস্তুত</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">অফলাইন সাপোর্ট সহ সম্পূর্ণ ফাংশনাল অ্যাপ</p>
+        </footer>
+    </div>
+
+    <div class="install-btn" id="install-btn" style="display: none;">
+        <i class="fas fa-download"></i>
+    </div>
+
+    <script>
+        // Enhanced App State Management
+        const appState = {
+            currentSubject: 'bangla',
+            currentTemplate: 'default',
+            cardTitle: 'বাংলা ব্যাকরণ',
+            cardContent: 'বাংলা ভাষায় বাক্য গঠনের নিয়ম:\n১. কর্তা + ক্রিয়া + কর্ম\n২. বিশেষণ বিশেষ্যের আগে বসে\n৩. ক্রিয়ার কাল অনুযায়ী বাক্য গঠিত হয়',
+            imageUrl: 'https://images.unsplash.com/photo-1589994965851-a8f479c573a9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            uploadedImage: null,
+            gradient: {
+                color1: '#6C63FF',
+                color2: '#FF6584',
+                direction: 'to right'
+            },
+            gallery: [],
+            customSubjects: [],
+            appVersion: 'v2.0.0'
+        };
+
+        // DOM Elements
+        const elements = {
+            themeToggle: document.getElementById('theme-toggle'),
+            subjectGrid: document.getElementById('subject-grid'),
+            generateBtn: document.getElementById('generate-card'),
+            downloadPng: document.getElementById('download-png'),
+            downloadJpg: document.getElementById('download-jpg'),
+            downloadPdf: document.getElementById('download-pdf'),
+            saveToGallery: document.getElementById('save-to-gallery'),
+            shareCard: document.getElementById('share-card'),
+            previewCard: document.getElementById('preview-card'),
+            previewTitle: document.getElementById('preview-title'),
+            previewContent: document.getElementById('preview-content'),
+            cardTitle: document.getElementById('card-title'),
+            cardContent: document.getElementById('card-content'),
+            imageUrl: document.getElementById('image-url'),
+            imageUpload: document.getElementById('image-upload'),
+            imagePreview: document.getElementById('image-preview'),
+            imageUploadContainer: document.getElementById('image-upload-container'),
+            urlInputContainer: document.getElementById('url-input-container'),
+            gradientContainer: document.getElementById('gradient-container'),
+            urlOption: document.getElementById('url-option'),
+            uploadOption: document.getElementById('upload-option'),
+            gradientOption: document.getElementById('gradient-option'),
+            removeImage: document.getElementById('remove-image'),
+            gradientColor1: document.getElementById('gradient-color1'),
+            gradientColor2: document.getElementById('gradient-color2'),
+            gradientDirection: document.getElementById('gradient-direction'),
+            templateOptions: document.querySelectorAll('.template-option'),
+            navItems: document.querySelectorAll('.nav-item'),
+            sections: document.querySelectorAll('.section'),
+            galleryContainer: document.getElementById('gallery-container'),
+            emptyGallery: document.getElementById('empty-gallery'),
+            gallerySearch: document.getElementById('gallery-search'),
+            offlineIndicator: document.getElementById('offline-indicator'),
+            installBtn: document.getElementById('install-btn'),
+            addCustomSubject: document.getElementById('add-custom-subject'),
+            customSubjectModal: document.getElementById('custom-subject-modal'),
+            closeModal: document.getElementById('close-modal'),
+            cancelCustomSubject: document.getElementById('cancel-custom-subject'),
+            saveCustomSubject: document.getElementById('save-custom-subject'),
+            customSubjectName: document.getElementById('custom-subject-name'),
+            customSubjectColor: document.getElementById('custom-subject-color'),
+            customSubjectIcon: document.getElementById('custom-subject-icon'),
+            copyContent: document.getElementById('copy-content'),
+            clearAll: document.getElementById('clear-all'),
+            autoFill: document.getElementById('auto-fill'),
+            exportData: document.getElementById('export-data'),
+            importData: document.getElementById('import-data'),
+            importDataBtn: document.getElementById('import-data-btn'),
+            resetData: document.getElementById('reset-data'),
+            appVersion: document.getElementById('app-version')
+        };
+
+        // Enhanced Subject background images
+        const subjectBackgrounds = {
+            bangla: 'https://images.unsplash.com/photo-1589994965851-a8f479c573a9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            math: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            english: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            science: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            physics: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            chemistry: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            biology: 'https://images.unsplash.com/photo-1530026405186-ed1f139313f8?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            geography: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            history: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            ict: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            accounting: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            economics: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            business: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            civics: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            sociology: 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            psychology: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            philosophy: 'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            art: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+            pe: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
+        };
+
+        // Enhanced Subject default content
+        const subjectContents = {
+            bangla: {
+                title: 'বাংলা ব্যাকরণ',
+                content: 'বাংলা ভাষায় বাক্য গঠনের নিয়ম:\n১. কর্তা + ক্রিয়া + কর্ম\n২. বিশেষণ বিশেষ্যের আগে বসে\n৩. ক্রিয়ার কাল অনুযায়ী বাক্য গঠিত হয়',
+                icon: 'fas fa-book-open'
+            },
+            math: {
+                title: 'গণিত সূত্র',
+                content: 'গুরুত্বপূর্ণ গণিত সূত্র:\n১. পাইথাগোরাসের সূত্র: a² + b² = c²\n২. বৃত্তের ক্ষেত্রফল: πr²\n৩. দ্বিঘাত সমীকরণ: ax² + bx + c = 0',
+                icon: 'fas fa-calculator'
+            },
+            english: {
+                title: 'ইংরেজি ব্যাকরণ',
+                content: 'ইংরেজি ব্যাকরণের নিয়ম:\n১. Subject + Verb + Object\n২. Articles: a, an, the\n৩. Tenses: Present, Past, Future',
+                icon: 'fas fa-language'
+            },
+            science: {
+                title: 'বৈজ্ঞানিক পদ্ধতি',
+                content: 'বৈজ্ঞানিক পদ্ধতির ধাপ:\n১. পর্যবেক্ষণ\n২. প্রশ্ন তৈরি\n৩. অনুমান\n৪. পরীক্ষা\n৫. সিদ্ধান্ত',
+                icon: 'fas fa-flask'
+            },
+            physics: {
+                title: 'পদার্থবিজ্ঞান সূত্র',
+                content: 'মহাকর্ষ সূত্র: F = G(m₁m₂)/r²\nনিউটনের গতি সূত্র:\n১. জড়তা সূত্র\n২. F=ma\n৩. ক্রিয়া-প্রতিক্রিয়া',
+                icon: 'fas fa-atom'
+            },
+            chemistry: {
+                title: 'রাসায়নিক সমীকরণ',
+                content: 'রাসায়নিক বিক্রিয়া:\n১. সংযোজন: A + B → AB\n২. বিয়োজন: AB → A + B\n৩. প্রতিস্থাপন: A + BC → AC + B',
+                icon: 'fas fa-vial'
+            },
+            biology: {
+                title: 'জীববিজ্ঞান',
+                content: 'কোষের গঠন:\n১. কোষ প্রাচীর\n২. সাইটোপ্লাজম\n৩. নিউক্লিয়াস\n৪. মাইটোকন্ড্রিয়া',
+                icon: 'fas fa-dna'
+            },
+            geography: {
+                title: 'ভূগোল তথ্য',
+                content: 'বাংলাদেশের ভৌগোলিক তথ্য:\n১. আয়তন: ১,৪৭,৫৭০ বর্গকিমি\n২. জনসংখ্যা: ১৬ কোটি+\n৩. রাজধানী: ঢাকা',
+                icon: 'fas fa-globe-asia'
+            },
+            history: {
+                title: 'ঐতিহাসিক ঘটনা',
+                content: 'বাংলাদেশের ইতিহাস:\n১৯৭১: মুক্তিযুদ্ধ\n১৯৭২: সংবিধান গৃহীত\n১৯৯১: সংসদীয় গণতন্ত্র',
+                icon: 'fas fa-monument'
+            },
+            ict: {
+                title: 'তথ্য ও যোগাযোগ প্রযুক্তি',
+                content: 'কম্পিউটারের অংশ:\n১. হার্ডওয়্যার\n২. সফটওয়্যার\n৩. ইনপুট ডিভাইস\n৪. আউটপুট ডিভাইস',
+                icon: 'fas fa-laptop-code'
+            },
+            accounting: {
+                title: 'হিসাববিজ্ঞান',
+                content: 'হিসাববিজ্ঞানের নীতিমালা:\n১. ব্যবসায়িক সত্তা\n২. চলমান প্রতিষ্ঠান\n৩. আর্থিক একক\n৪. সময়কাল',
+                icon: 'fas fa-file-invoice-dollar'
+            },
+            economics: {
+                title: 'অর্থনীতি',
+                content: 'অর্থনীতির প্রকারভেদ:\n১. ব্যক্তিগত অর্থনীতি\n২. সামষ্টিক অর্থনীতি\n৩. উন্নয়ন অর্থনীতি\n৪. আন্তর্জাতিক অর্থনীতি',
+                icon: 'fas fa-chart-line'
+            },
+            business: {
+                title: 'ব্যবসায় শিক্ষা',
+                content: 'ব্যবসায়ের প্রকারভেদ:\n১. একমালিকানা\n২. অংশীদারি\n৩. কোম্পানি\n৪. সমবায় সমিতি',
+                icon: 'fas fa-briefcase'
+            },
+            civics: {
+                title: 'নাগরিকতা',
+                content: 'নাগরিকের দায়িত্ব:\n১. আইন মান্য করা\n২. কর প্রদান\n৩. ভোটদান\n৪. দেশপ্রেম',
+                icon: 'fas fa-landmark'
+            },
+            sociology: {
+                title: 'সমাজবিজ্ঞান',
+                content: 'সমাজের উপাদান:\n১. পরিবার\n২. শিক্ষা\n৩. ধর্ম\n৪. অর্থনীতি',
+                icon: 'fas fa-users'
+            },
+            psychology: {
+                title: 'মনোবিজ্ঞান',
+                content: 'মনোবিজ্ঞানের শাখা:\n১. জ্ঞানীয় মনোবিজ্ঞান\n২. বিকাশমূলক মনোবিজ্ঞান\n৩. সামাজিক মনোবিজ্ঞান\n৪. ক্লিনিকাল মনোবিজ্ঞান',
+                icon: 'fas fa-brain'
+            },
+            philosophy: {
+                title: 'দর্শন',
+                content: 'দর্শনের শাখা:\n১. অধিবিদ্যা\n২. জ্ঞানতত্ত্ব\n৩. নীতিশাস্ত্র\n৪. যুক্তিবিদ্যা',
+                icon: 'fas fa-book'
+            },
+            art: {
+                title: 'শিল্প ও সংস্কৃতি',
+                content: 'শিল্পের প্রকারভেদ:\n১. চিত্রকলা\n২. ভাস্কর্য\n৩. স্থাপত্য\n৪. সঙ্গীত',
+                icon: 'fas fa-palette'
+            },
+            pe: {
+                title: 'শারীরিক শিক্ষা',
+                content: 'স্বাস্থ্যকর জীবনযাপন:\n১. নিয়মিত ব্যায়াম\n২. সুষম খাদ্য\n৩. পর্যাপ্ত ঘুম\n৪. মানসিক স্বাস্থ্য',
+                icon: 'fas fa-running'
+            }
+        };
+
+        // Initialize App
+        function initApp() {
+            loadAppState();
+            setupEventListeners();
+            renderSubjectGrid();
+            updatePreview();
+            setupOfflineDetection();
+            checkPWAInstallable();
+            loadGallery();
+            elements.appVersion.textContent = appState.appVersion;
+        }
+
+        // Load app state from localStorage
+        function loadAppState() {
+            const saved = localStorage.getItem('subjectCardMaker');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                Object.assign(appState, parsed);
+            }
+        }
+
+        // Save app state to localStorage
+        function saveAppState() {
+            localStorage.setItem('subjectCardMaker', JSON.stringify(appState));
+        }
+
+        // Render subject grid
+        function renderSubjectGrid() {
+            elements.subjectGrid.innerHTML = '';
+            
+            // Add predefined subjects
+            Object.keys(subjectContents).forEach(subject => {
+                const subjectCard = document.createElement('div');
+                subjectCard.className = `subject-card ${appState.currentSubject === subject ? 'active' : ''}`;
+                subjectCard.dataset.subject = subject;
+                subjectCard.innerHTML = `
+                    <i class="${subjectContents[subject].icon}"></i>
+                    <h3>${subjectContents[subject].title.split(' ')[0]}</h3>
+                `;
+                elements.subjectGrid.appendChild(subjectCard);
+            });
+            
+            // Add custom subjects
+            appState.customSubjects.forEach(subject => {
+                const subjectCard = document.createElement('div');
+                subjectCard.className = `subject-card custom-card ${appState.currentSubject === subject.id ? 'active' : ''}`;
+                subjectCard.dataset.subject = subject.id;
+                subjectCard.innerHTML = `
+                    <i class="${subject.icon}"></i>
+                    <h3>${subject.name}</h3>
+                `;
+                // Apply custom color
+                subjectCard.style.borderColor = subject.color;
+                subjectCard.querySelector('i').style.color = subject.color;
+                elements.subjectGrid.appendChild(subjectCard);
+            });
+            
+            // Add event listeners to subject cards
+            document.querySelectorAll('.subject-card').forEach(card => {
+                card.addEventListener('click', () => selectSubject(card.dataset.subject));
+            });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Theme toggle
+            elements.themeToggle.addEventListener('click', toggleTheme);
+
+            // Generate card
+            elements.generateBtn.addEventListener('click', generateCard);
+
+            // Download buttons
+            elements.downloadPng.addEventListener('click', () => downloadCard('png'));
+            elements.downloadJpg.addEventListener('click', () => downloadCard('jpg'));
+            elements.downloadPdf.addEventListener('click', downloadPdf);
+
+            // Save to gallery
+            elements.saveToGallery.addEventListener('click', saveToGallery);
+
+            // Share card
+            elements.shareCard.addEventListener('click', shareCard);
+
+            // Real-time preview updates
+            elements.cardTitle.addEventListener('input', updatePreview);
+            elements.cardContent.addEventListener('input', updatePreview);
+            elements.imageUrl.addEventListener('input', updatePreview);
+
+            // Gradient updates
+            elements.gradientColor1.addEventListener('input', updateGradient);
+            elements.gradientColor2.addEventListener('input', updateGradient);
+            elements.gradientDirection.addEventListener('change', updateGradient);
+
+            // Template selection
+            elements.templateOptions.forEach(option => {
+                option.addEventListener('click', () => selectTemplate(option.dataset.template));
+            });
+
+            // Navigation
+            elements.navItems.forEach(item => {
+                item.addEventListener('click', () => switchSection(item.dataset.section));
+            });
+
+            // Template gallery items
+            document.querySelectorAll('#templates-section .gallery-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const template = item.dataset.template;
+                    selectSubject(template);
+                    switchSection('create');
+                    showNotification(`${template} টেমপ্লেট নির্বাচন করা হয়েছে!`, 'success');
+                });
+            });
+
+            // Image upload functionality
+            setupImageUpload();
+
+            // Custom subject functionality
+            elements.addCustomSubject.addEventListener('click', () => {
+                elements.customSubjectModal.classList.add('active');
+            });
+
+            elements.closeModal.addEventListener('click', closeCustomSubjectModal);
+            elements.cancelCustomSubject.addEventListener('click', closeCustomSubjectModal);
+
+            elements.saveCustomSubject.addEventListener('click', saveCustomSubject);
+
+            // Quick actions
+            elements.copyContent.addEventListener('click', copyContent);
+            elements.clearAll.addEventListener('click', clearAll);
+            elements.autoFill.addEventListener('click', autoFill);
+
+            // Data management
+            elements.exportData.addEventListener('click', exportData);
+            elements.importDataBtn.addEventListener('click', importData);
+            elements.resetData.addEventListener('click', resetData);
+
+            // Gallery search
+            elements.gallerySearch.addEventListener('input', filterGallery);
+        }
+
+        // Setup image upload functionality
+        function setupImageUpload() {
+            // Toggle between URL, upload and gradient options
+            elements.urlOption.addEventListener('click', () => {
+                elements.urlOption.classList.add('active');
+                elements.uploadOption.classList.remove('active');
+                elements.gradientOption.classList.remove('active');
+                elements.urlInputContainer.style.display = 'block';
+                elements.imageUploadContainer.style.display = 'none';
+                elements.gradientContainer.style.display = 'none';
+                appState.uploadedImage = null;
+                updatePreview();
+            });
+
+            elements.uploadOption.addEventListener('click', () => {
+                elements.uploadOption.classList.add('active');
+                elements.urlOption.classList.remove('active');
+                elements.gradientOption.classList.remove('active');
+                elements.urlInputContainer.style.display = 'none';
+                elements.imageUploadContainer.style.display = 'block';
+                elements.gradientContainer.style.display = 'none';
+                elements.imageUrl.value = '';
+                updatePreview();
+            });
+
+            elements.gradientOption.addEventListener('click', () => {
+                elements.gradientOption.classList.add('active');
+                elements.urlOption.classList.remove('active');
+                elements.uploadOption.classList.remove('active');
+                elements.urlInputContainer.style.display = 'none';
+                elements.imageUploadContainer.style.display = 'none';
+                elements.gradientContainer.style.display = 'block';
+                elements.imageUrl.value = '';
+                appState.uploadedImage = null;
+                updatePreview();
+            });
+
+            // Handle file selection
+            elements.imageUpload.addEventListener('change', handleImageUpload);
+
+            // Handle drag and drop
+            elements.imageUploadContainer.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                elements.imageUploadContainer.classList.add('dragover');
+            });
+
+            elements.imageUploadContainer.addEventListener('dragleave', () => {
+                elements.imageUploadContainer.classList.remove('dragover');
+            });
+
+            elements.imageUploadContainer.addEventListener('drop', (e) => {
+                e.preventDefault();
+                elements.imageUploadContainer.classList.remove('dragover');
+                
+                if (e.dataTransfer.files.length) {
+                    elements.imageUpload.files = e.dataTransfer.files;
+                    handleImageUpload();
+                }
+            });
+
+            // Remove image button
+            elements.removeImage.addEventListener('click', removeUploadedImage);
+        }
+
+        // Handle image upload
+        function handleImageUpload() {
+            const file = elements.imageUpload.files[0];
+            if (!file) return;
+
+            // Check if file is an image
+            if (!file.type.match('image.*')) {
+                showNotification('দয়া করে একটি বৈধ ইমেজ ফাইল নির্বাচন করুন!', 'error');
+                return;
+            }
+
+            // Check file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showNotification('ইমেজের সাইজ 5MB এর বেশি হতে পারবে না!', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                appState.uploadedImage = e.target.result;
+                elements.imagePreview.src = e.target.result;
+                elements.imagePreview.style.display = 'block';
+                elements.removeImage.style.display = 'block';
+                updatePreview();
+                showNotification('ইমেজ সফলভাবে আপলোড হয়েছে!', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Remove uploaded image
+        function removeUploadedImage() {
+            appState.uploadedImage = null;
+            elements.imagePreview.style.display = 'none';
+            elements.removeImage.style.display = 'none';
+            elements.imageUpload.value = '';
+            updatePreview();
+            showNotification('ইমেজ সরানো হয়েছে!', 'info');
+        }
+
+        // Update gradient
+        function updateGradient() {
+            appState.gradient.color1 = elements.gradientColor1.value;
+            appState.gradient.color2 = elements.gradientColor2.value;
+            appState.gradient.direction = elements.gradientDirection.value;
+            updatePreview();
+        }
+
+        // Theme functionality
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+        }
+
+        // Load saved theme
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-theme');
+        }
+
+        // Subject selection
+        function selectSubject(subject) {
+            appState.currentSubject = subject;
+            
+            // Update active subject card
+            document.querySelectorAll('.subject-card').forEach(card => card.classList.remove('active'));
+            document.querySelector(`[data-subject="${subject}"]`).classList.add('active');
+            
+            // Check if it's a custom subject
+            const isCustomSubject = appState.customSubjects.some(s => s.id === subject);
+            
+            if (!isCustomSubject && subjectContents[subject]) {
+                // Update form with subject-specific content
+                elements.cardTitle.value = subjectContents[subject].title;
+                elements.cardContent.value = subjectContents[subject].content;
+                elements.imageUrl.value = subjectBackgrounds[subject];
+                
+                // Update app state
+                appState.cardTitle = subjectContents[subject].title;
+                appState.cardContent = subjectContents[subject].content;
+                appState.imageUrl = subjectBackgrounds[subject];
+                appState.uploadedImage = null;
+            }
+            
+            // Reset image upload
+            if (elements.uploadOption.classList.contains('active')) {
+                removeUploadedImage();
+            }
+            
+            updatePreview();
+        }
+
+        // Template selection
+        function selectTemplate(template) {
+            appState.currentTemplate = template;
+            
+            // Update active template
+            elements.templateOptions.forEach(opt => opt.classList.remove('active'));
+            document.querySelector(`[data-template="${template}"]`).classList.add('active');
+            
+            updatePreview();
+        }
+
+        // Switch between sections
+        function switchSection(section) {
+            // Update active nav item
+            elements.navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.section === section) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Show/hide sections
+            elements.sections.forEach(sec => {
+                sec.classList.remove('active');
+                if (sec.id === `${section}-section`) {
+                    sec.classList.add('active');
+                }
+            });
+            
+            // Load gallery if switching to gallery section
+            if (section === 'gallery') {
+                loadGallery();
+            }
+        }
+
+        // Generate card
+        function generateCard() {
+            const title = elements.cardTitle.value.trim();
+            const content = elements.cardContent.value.trim();
+            
+            if (!title) {
+                showNotification('দয়া করে একটি শিরোনাম লিখুন!', 'error');
+                return;
+            }
+            
+            if (!content) {
+                showNotification('দয়া করে বিষয়বস্তু লিখুন!', 'error');
+                return;
+            }
+
+            // Update app state
+            appState.cardTitle = title;
+            appState.cardContent = content;
+            
+            if (elements.urlOption.classList.contains('active')) {
+                appState.imageUrl = elements.imageUrl.value.trim();
+                appState.uploadedImage = null;
+            } else if (elements.uploadOption.classList.contains('active')) {
+                appState.imageUrl = '';
+            } else {
+                appState.imageUrl = '';
+            }
+            
+            updatePreview();
+            showNotification('কার্ড সফলভাবে তৈরি হয়েছে!', 'success');
+        }
+
+        // Update preview
+        function updatePreview() {
+            const title = elements.cardTitle.value.trim() || appState.cardTitle;
+            const content = elements.cardContent.value.trim() || appState.cardContent;
+
+            elements.previewTitle.textContent = title;
+            elements.previewContent.textContent = content;
+
+            // Update card class based on subject
+            const isCustomSubject = appState.customSubjects.some(s => s.id === appState.currentSubject);
+            if (isCustomSubject) {
+                elements.previewCard.className = 'photocard custom-card';
+            } else {
+                elements.previewCard.className = `photocard ${appState.currentSubject}-card`;
+            }
+            
+            // Apply background
+            if (elements.urlOption.classList.contains('active') && elements.imageUrl.value.trim()) {
+                elements.previewCard.style.backgroundImage = `url('${elements.imageUrl.value.trim()}')`;
+            } else if (elements.uploadOption.classList.contains('active') && appState.uploadedImage) {
+                elements.previewCard.style.backgroundImage = `url('${appState.uploadedImage}')`;
+            } else if (elements.gradientOption.classList.contains('active')) {
+                elements.previewCard.style.backgroundImage = `linear-gradient(${appState.gradient.direction}, ${appState.gradient.color1}, ${appState.gradient.color2})`;
+            } else {
+                elements.previewCard.style.backgroundImage = `url('${subjectBackgrounds[appState.currentSubject]}')`;
+            }
+            
+            // Apply template-specific styles
+            applyTemplateStyles();
+        }
+
+        // Apply template-specific styles
+        function applyTemplateStyles() {
+            const content = elements.previewContent;
+            const title = elements.previewTitle;
+            const cardContent = elements.previewCard.querySelector('.content');
+            
+            // Reset styles
+            content.style = '';
+            title.style = '';
+            cardContent.style = '';
+            
+            switch(appState.currentTemplate) {
+                case 'minimal':
+                    content.style.fontSize = '1.1rem';
+                    content.style.lineHeight = '1.4';
+                    title.style.fontSize = '1.8rem';
+                    cardContent.style.background = 'rgba(0, 0, 0, 0.5)';
+                    break;
+                case 'elegant':
+                    content.style.fontSize = '1.3rem';
+                    content.style.fontStyle = 'italic';
+                    content.style.lineHeight = '1.8';
+                    title.style.fontSize = '2.5rem';
+                    title.style.fontWeight = '300';
+                    cardContent.style.background = 'rgba(0, 0, 0, 0.7)';
+                    break;
+                case 'creative':
+                    content.style.fontSize = '1.2rem';
+                    content.style.fontWeight = '600';
+                    content.style.lineHeight = '1.6';
+                    title.style.fontSize = '2.2rem';
+                    title.style.textShadow = '2px 2px 4px rgba(0,0,0,0.5)';
+                    cardContent.style.background = 'rgba(0, 0, 0, 0.4)';
+                    cardContent.style.border = '2px solid white';
+                    break;
+                case 'modern':
+                    content.style.fontSize = '1.2rem';
+                    content.style.lineHeight = '1.5';
+                    title.style.fontSize = '2rem';
+                    cardContent.style.background = 'rgba(255, 255, 255, 0.2)';
+                    cardContent.style.backdropFilter = 'blur(10px)';
+                    cardContent.style.border = '1px solid rgba(255, 255, 255, 0.3)';
+                    break;
+                default:
+                    content.style.fontSize = '1.3rem';
+                    content.style.lineHeight = '1.6';
+                    title.style.fontSize = '2.2rem';
+                    break;
+            }
+        }
+
+        // Download card as image
+        function downloadCard(format) {
+            html2canvas(elements.previewCard, {
+                scale: 2, // Higher quality
+                useCORS: true // Allow cross-origin images
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `${appState.currentSubject}-card-${Date.now()}.${format}`;
+                link.href = canvas.toDataURL(`image/${format}`, 0.9);
+                link.click();
+                showNotification(`কার্ড ${format.toUpperCase()} ফরম্যাটে ডাউনলোড完成了!`, 'success');
+            });
+        }
+
+        // Download card as PDF
+        function downloadPdf() {
+            html2canvas(elements.previewCard, {
+                scale: 2,
+                useCORS: true
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/jpeg', 0.9);
+                const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
+                const imgWidth = 190;
+                const pageHeight = 280;
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 10;
+
+                pdf.addImage(imgData, 'JPEG', 10, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'JPEG', 10, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                pdf.save(`${appState.currentSubject}-card-${Date.now()}.pdf`);
+                showNotification('কার্ড PDF ফরম্যাটে ডাউনলোড完成了!', 'success');
+            });
+        }
+
+        // Save card to gallery
+        function saveToGallery() {
+            // Create a thumbnail of the card
+            html2canvas(elements.previewCard, {
+                scale: 0.5, // Lower quality for thumbnail
+                useCORS: true
+            }).then(canvas => {
+                const thumbnail = canvas.toDataURL('image/jpeg', 0.7);
+                
+                const cardData = {
+                    id: Date.now(),
+                    subject: appState.currentSubject,
+                    title: appState.cardTitle,
+                    content: appState.cardContent,
+                    imageUrl: appState.imageUrl,
+                    uploadedImage: appState.uploadedImage,
+                    gradient: appState.gradient,
+                    template: appState.currentTemplate,
+                    thumbnail: thumbnail,
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Add to gallery
+                appState.gallery.push(cardData);
+                saveAppState();
+                
+                showNotification('কার্ড গ্যালারিতে সেভ করা হয়েছে!', 'success');
+                
+                // If we're in the gallery section, reload it
+                if (document.getElementById('gallery-section').classList.contains('active')) {
+                    loadGallery();
+                }
+            });
+        }
+
+        // Share card
+        function shareCard() {
+            if (navigator.share) {
+                html2canvas(elements.previewCard, {
+                    scale: 1,
+                    useCORS: true
+                }).then(canvas => {
+                    canvas.toBlob(blob => {
+                        const file = new File([blob], 'photocard.png', { type: 'image/png' });
+                        navigator.share({
+                            title: appState.cardTitle,
+                            text: appState.cardContent.substring(0, 100) + '...',
+                            files: [file]
+                        }).then(() => {
+                            showNotification('কার্ড শেয়ার করা হয়েছে!', 'success');
+                        }).catch(error => {
+                            showNotification('শেয়ারিং ব্যর্থ হয়েছে!', 'error');
+                        });
+                    });
+                });
+            } else {
+                showNotification('আপনার ব্রাউজার শেয়ারিং সাপোর্ট করে না!', 'error');
+            }
+        }
+
+        // Load gallery
+        function loadGallery() {
+            elements.galleryContainer.innerHTML = '';
+            
+            if (appState.gallery.length === 0) {
+                elements.emptyGallery.style.display = 'block';
+                return;
+            }
+            
+            elements.emptyGallery.style.display = 'none';
+            
+            // Add gallery items in reverse order (newest first)
+            appState.gallery.slice().reverse().forEach(card => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item';
+                galleryItem.innerHTML = `
+                    <img src="${card.thumbnail}" alt="${card.title}">
+                    <div class="gallery-item-content">
+                        <h4>${card.title}</h4>
+                        <p>বিষয়: ${card.subject} | টেমপ্লেট: ${card.template}</p>
+                        <div style="margin-top: 10px; display: flex; gap: 5px;">
+                            <button class="btn" style="padding: 5px 10px; font-size: 0.8rem;" onclick="loadCardFromGallery(${card.id})">
+                                <i class="fas fa-edit"></i> এডিট
+                            </button>
+                            <button class="btn" style="padding: 5px 10px; font-size: 0.8rem; background: var(--accent);" onclick="deleteFromGallery(${card.id})">
+                                <i class="fas fa-trash"></i> ডিলিট
+                            </button>
+                        </div>
+                    </div>
+                `;
+                elements.galleryContainer.appendChild(galleryItem);
+            });
+        }
+
+        // Filter gallery
+        function filterGallery() {
+            const searchTerm = elements.gallerySearch.value.toLowerCase();
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            
+            galleryItems.forEach(item => {
+                const title = item.querySelector('h4').textContent.toLowerCase();
+                const subject = item.querySelector('p').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || subject.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Load card from gallery
+        function loadCardFromGallery(id) {
+            const card = appState.gallery.find(c => c.id === id);
+            if (card) {
+                appState.currentSubject = card.subject;
+                appState.cardTitle = card.title;
+                appState.cardContent = card.content;
+                appState.imageUrl = card.imageUrl;
+                appState.uploadedImage = card.uploadedImage;
+                appState.gradient = card.gradient || appState.gradient;
+                appState.currentTemplate = card.template;
+                
+                // Update UI
+                elements.cardTitle.value = card.title;
+                elements.cardContent.value = card.content;
+                
+                // Handle image source
+                if (card.uploadedImage) {
+                    elements.uploadOption.click();
+                    elements.imagePreview.src = card.uploadedImage;
+                    elements.imagePreview.style.display = 'block';
+                    elements.removeImage.style.display = 'block';
+                } else if (card.imageUrl) {
+                    elements.urlOption.click();
+                    elements.imageUrl.value = card.imageUrl;
+                } else if (card.gradient) {
+                    elements.gradientOption.click();
+                    elements.gradientColor1.value = card.gradient.color1;
+                    elements.gradientColor2.value = card.gradient.color2;
+                    elements.gradientDirection.value = card.gradient.direction;
+                }
+                
+                // Update active subject
+                document.querySelectorAll('.subject-card').forEach(c => c.classList.remove('active'));
+                document.querySelector(`[data-subject="${card.subject}"]`).classList.add('active');
+                
+                // Update active template
+                elements.templateOptions.forEach(opt => opt.classList.remove('active'));
+                document.querySelector(`[data-template="${card.template}"]`).classList.add('active');
+                
+                // Switch to create section
+                switchSection('create');
+                updatePreview();
+                
+                showNotification('কার্ড লোড করা হয়েছে!', 'success');
+            }
+        }
+
+        // Delete from gallery
+        function deleteFromGallery(id) {
+            if (confirm('আপনি কি এই কার্ডটি ডিলিট করতে চান?')) {
+                appState.gallery = appState.gallery.filter(c => c.id !== id);
+                saveAppState();
+                loadGallery();
+                showNotification('কার্ড ডিলিট করা হয়েছে!', 'success');
+            }
+        }
+
+        // Custom subject functionality
+        function closeCustomSubjectModal() {
+            elements.customSubjectModal.classList.remove('active');
+            // Reset form
+            elements.customSubjectName.value = '';
+            elements.customSubjectColor.value = '#6C63FF';
+            elements.customSubjectIcon.value = 'fas fa-book';
+        }
+
+        function saveCustomSubject() {
+            const name = elements.customSubjectName.value.trim();
+            const color = elements.customSubjectColor.value;
+            const icon = elements.customSubjectIcon.value;
+            
+            if (!name) {
+                showNotification('দয়া করে বিষয়ের নাম লিখুন!', 'error');
+                return;
+            }
+            
+            const customSubject = {
+                id: `custom-${Date.now()}`,
+                name: name,
+                color: color,
+                icon: icon
+            };
+            
+            appState.customSubjects.push(customSubject);
+            saveAppState();
+            renderSubjectGrid();
+            closeCustomSubjectModal();
+            showNotification('নতুন বিষয় যোগ করা হয়েছে!', 'success');
+        }
+
+        // Quick actions
+        function copyContent() {
+            const content = elements.cardContent.value;
+            navigator.clipboard.writeText(content).then(() => {
+                showNotification('কন্টেন্ট কপি করা হয়েছে!', 'success');
+            });
+        }
+
+        function clearAll() {
+            if (confirm('আপনি কি সবকিছু ক্লিয়ার করতে চান?')) {
+                elements.cardTitle.value = '';
+                elements.cardContent.value = '';
+                elements.imageUrl.value = '';
+                removeUploadedImage();
+                updatePreview();
+                showNotification('সবকিছু ক্লিয়ার করা হয়েছে!', 'success');
+            }
+        }
+
+        function autoFill() {
+            // Get current subject content
+            const currentSubject = appState.currentSubject;
+            if (subjectContents[currentSubject]) {
+                elements.cardTitle.value = subjectContents[currentSubject].title;
+                elements.cardContent.value = subjectContents[currentSubject].content;
+                updatePreview();
+                showNotification('অটো ফিল করা হয়েছে!', 'success');
+            }
+        }
+
+        // Data management
+        function exportData() {
+            const dataStr = JSON.stringify(appState);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `subject-card-maker-backup-${new Date().toISOString().split('T')[0]}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            showNotification('ডেটা এক্সপোর্ট করা হয়েছে!', 'success');
+        }
+
+        function importData() {
+            const file = elements.importData.files[0];
+            if (!file) {
+                showNotification('দয়া করে একটি ফাইল নির্বাচন করুন!', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    Object.assign(appState, importedData);
+                    saveAppState();
+                    renderSubjectGrid();
+                    loadGallery();
+                    showNotification('ডেটা ইমপোর্ট করা হয়েছে!', 'success');
+                } catch (error) {
+                    showNotification('ডেটা ইমপোর্ট ব্যর্থ হয়েছে!', 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function resetData() {
+            if (confirm('আপনি কি সমস্ত ডেটা রিসেট করতে চান? এটি পূর্বাবস্থায় ফিরিয়ে আনবে না!')) {
+                localStorage.removeItem('subjectCardMaker');
+                location.reload();
+            }
+        }
+
+        // Offline detection
+        function setupOfflineDetection() {
+            window.addEventListener('online', () => {
+                elements.offlineIndicator.classList.remove('show');
+                showNotification('ইন্টারনেট সংযোগ পুনরুদ্ধার করা হয়েছে', 'success');
+            });
+            
+            window.addEventListener('offline', () => {
+                elements.offlineIndicator.classList.add('show');
+                showNotification('আপনি অফলাইন মোডে আছেন, কিন্তু কার্ড তৈরি চালিয়ে যেতে পারেন', 'info');
+            });
+            
+            // Check initial status
+            if (!navigator.onLine) {
+                elements.offlineIndicator.classList.add('show');
+            }
+        }
+
+        // PWA functionality
+        function checkPWAInstallable() {
+            // Check if the browser supports PWA installation
+            if ('BeforeInstallPromptEvent' in window) {
+                let deferredPrompt;
+                
+                window.addEventListener('beforeinstallprompt', (e) => {
+                    // Prevent the mini-infobar from appearing on mobile
+                    e.preventDefault();
+                    // Stash the event so it can be triggered later
+                    deferredPrompt = e;
+                    // Show the install button
+                    elements.installBtn.style.display = 'flex';
+                });
+                
+                // Save the deferredPrompt for later use
+                window.deferredPrompt = deferredPrompt;
+                
+                // Install button click handler
+                elements.installBtn.addEventListener('click', installPWA);
+            }
+        }
+
+        function installPWA() {
+            if (window.deferredPrompt) {
+                window.deferredPrompt.prompt();
+                
+                window.deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        showNotification('অ্যাপটি ইন্সটল করা হয়েছে!', 'success');
+                    }
+                    window.deferredPrompt = null;
+                    elements.installBtn.style.display = 'none';
+                });
+            }
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            // Remove existing notifications
+            const existing = document.querySelector('.notification');
+            if (existing) existing.remove();
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            // Show notification
+            setTimeout(() => notification.classList.add('show'), 100);
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Make functions available globally for onclick handlers
+        window.loadCardFromGallery = loadCardFromGallery;
+        window.deleteFromGallery = deleteFromGallery;
+
+        // Initialize the app when the page loads
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+<!-- manifest.json লিঙ্ক যোগ করুন -->
+<link rel="manifest" href="manifest.json">
+
+<!-- থিম কালর মেটা ট্যাগ -->
+<meta name="theme-color" content="#6C63FF">
+
+<!-- iOS সাপোর্ট -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ফটোকার্ড মেকার">
+<link rel="apple-touch-icon" href="icons/icon-152x152.png">
+
+<!-- service-worker রেজিস্ট্রেশন -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, function(err) {
+          console.log('ServiceWorker registration failed: ', err);
+        });
+    });
+  }
+</script>
+</body>
+</html>
